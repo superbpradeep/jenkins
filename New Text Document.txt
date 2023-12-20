@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run Maven tests
+                sh 'mvn clean test'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build the project using Maven
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Run HelloWorld') {
+            steps {
+                // Run the HelloWorld program
+                sh 'java -cp target/your-web-app/WEB-INF/classes com.example.HelloWorld'
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                // Copy the generated WAR file to Tomcat webapps directory
+                sh 'cp target/your-web-app.war $CATALINA_HOME/webapps/'
+            }
+        }
+
+        stage('Restart Tomcat') {
+            steps {
+                // Restart Tomcat (replace with your Tomcat restart command)
+                sh '$CATALINA_HOME/bin/shutdown.sh'
+                sh '$CATALINA_HOME/bin/startup.sh'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded! The application is deployed.'
+        }
+        failure {
+            echo 'Pipeline failed. Deployment was not successful.'
+        }
+    }
+}

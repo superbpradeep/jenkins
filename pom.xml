@@ -1,0 +1,9 @@
+your-web-app/
+|-- src/
+|   `-- main/
+|       `-- java/
+|           `-- com/
+|               `-- example/
+|                   `-- HelloWorld.java
+|-- pom.xml
+|-- ...
